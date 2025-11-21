@@ -2,7 +2,7 @@
 
 A real-time donation alert system that integrates Stripe payments with OBS Studio for live streaming. When viewers make donations through Stripe, animated alerts appear on your stream instantly.
 
-![Donation Alert Demo](https://s4.ezgif.com/tmp/ezgif-4df2ad2800fd208c.gif)
+![Donation Alert Demo](https://i.ibb.co/BVfjWmh8/ezgif-4df2ad2800fd208c.gif)
 
 
 ## Features
