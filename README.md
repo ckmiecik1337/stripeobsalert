@@ -34,6 +34,13 @@ cd stripeobsdonationalerts
 ```
 
 ### 2. Install Dependencies
+Ensure you have npm installed, if not:
+
+
+```bash
+sudo apt-get install npm
+```
+
 
 ```bash
 npm install
