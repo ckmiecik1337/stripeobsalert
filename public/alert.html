@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Donation Alert</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: transparent;
+      overflow: hidden;
+    }
+
+    .alert-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: url('/background.png') center/cover no-repeat;
+      /* Fallback gradient if image doesn't load */
+      background-color: #667eea;
+      padding: 40px 60px;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      opacity: 0;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      min-width: 500px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .alert-container.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .alert-title {
+      font-size: 32px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .donor-name {
+      font-size: 48px;
+      font-weight: bold;
+      color: #ffd700;
+      margin-bottom: 15px;
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+      animation: glow 2s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4), 0 0 10px rgba(255, 215, 0, 0.5);
+      }
+      50% {
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.8);
+      }
+    }
+
+    .amount {
+      font-size: 64px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .message {
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.9);
+      font-style: italic;
+      margin-top: 20px;
+      max-width: 600px;
+      line-height: 1.4;
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #ffd700;
+      position: absolute;
+      animation: confetti-fall 3s linear;
+    }
+
+    @keyframes confetti-fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Sound wave animation */
+    .sound-wave {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      margin: 20px 0;
+    }
+
+    .sound-bar {
+      width: 6px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 3px;
+      animation: sound-wave 0.8s ease-in-out infinite;
+    }
+
+    .sound-bar:nth-child(2) { animation-delay: 0.1s; }
+    .sound-bar:nth-child(3) { animation-delay: 0.2s; }
+    .sound-bar:nth-child(4) { animation-delay: 0.3s; }
+    .sound-bar:nth-child(5) { animation-delay: 0.2s; }
+    .sound-bar:nth-child(6) { animation-delay: 0.1s; }
+
+    @keyframes sound-wave {
+      0%, 100% { height: 30px; }
+      50% { height: 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="alert-container" id="alertContainer">
+    <div class="alert-title">NEW DONATION!</div>
+    <div class="sound-wave">
+      <div class="sound-bar"></div>
+      <div class="sound-bar"></div>
+      <div class="sound-bar"></div>
+      <div class="sound-bar"></div>
+      <div class="sound-bar"></div>
+      <div class="sound-bar"></div>
+    </div>
+    <div class="donor-name" id="donorName">Anonymous</div>
+    <div class="amount" id="amount">$0.00</div>
+    <div class="message" id="message"></div>
+  </div>
+
+  <!-- Alert Sound (optional) -->
+  <audio id="alertSound" preload="auto">
+    <!-- You can add your own sound file here -->
+    <!-- <source src="alert-sound.mp3" type="audio/mpeg"> -->
+  </audio>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Connect to the same server that served this page (with explicit config)
+    const socket = io(window.location.origin);
+    const alertContainer = document.getElementById('alertContainer');
+    const donorNameEl = document.getElementById('donorName');
+    const amountEl = document.getElementById('amount');
+    const messageEl = document.getElementById('message');
+    const alertSound = document.getElementById('alertSound');
+
+    // Connect to server
+    socket.on('connect', () => {
+      console.log('Connected to donation server');
+    });
+
+    // Listen for donation events
+    socket.on('donation', (data) => {
+      console.log('New donation received:', data);
+      showAlert(data);
+    });
+
+    function showAlert(donation) {
+      // Update alert content
+      donorNameEl.textContent = donation.donorName;
+      amountEl.textContent = `$${donation.amount.toFixed(2)} ${donation.currency}`;
+      messageEl.textContent = donation.message;
+
+      // Show the alert
+      alertContainer.classList.add('show');
+
+      // Play sound if available
+      if (alertSound.src) {
+        alertSound.play().catch(e => console.log('Sound play failed:', e));
+      }
+
+      // Create confetti effect
+      createConfetti();
+
+      // Hide alert after 8 seconds
+      setTimeout(() => {
+        alertContainer.classList.remove('show');
+      }, 8000);
+    }
+
+    function createConfetti() {
+      const colors = ['#ffd700', '#ff6b6b', '#4ecdc4', '#45b7d1', '#f7b731', '#5f27cd'];
+      
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.animationDelay = Math.random() * 0.5 + 's';
+          document.body.appendChild(confetti);
+
+          // Remove confetti after animation
+          setTimeout(() => confetti.remove(), 3000);
+        }, i * 30);
+      }
+    }
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from donation server');
+    });
+  </script>
+</body>
+</html>
