@@ -4,8 +4,6 @@ A real-time donation alert system that integrates Stripe payments with OBS Studi
 
 ![Donation Alert Demo](https://s4.ezgif.com/tmp/ezgif-4df2ad2800fd208c.gif)
 
-![OBS Demo](https://s4.ezgif.com/tmp/ezgif-446f3f4a6748aeb3.gif)
-
 
 ## Features
 
