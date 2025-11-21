@@ -30,7 +30,7 @@ A real-time donation alert system that integrates Stripe payments with OBS Studi
 
 ```bash
 git clone https://github.com/ckmiecik1337/stripeobsalert
-cd stripe-obs-donation-alerts
+cd stripeobsdonationalerts
 ```
 
 ### 2. Install Dependencies
