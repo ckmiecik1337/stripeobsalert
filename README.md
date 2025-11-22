@@ -50,7 +50,7 @@ Ensure you have npm installed, if not:
 sudo apt-get install npm
 ```
 
-
+Install this projects package
 ```bash
 npm install
 ```
