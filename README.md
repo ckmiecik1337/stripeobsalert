@@ -50,7 +50,7 @@ Ensure you have npm installed, if not:
 sudo apt-get install npm
 ```
 
-Install this projects package
+Install packages and dependencies for this project
 ```bash
 npm install
 ```
@@ -125,8 +125,8 @@ Test donation:  POST http://localhost:3001/test-donation
 3. Recommended settings:
    - Width: **1920**
    - Height: **1080**
-   - ☑ Refresh browser when scene becomes active
-   - ☐ Shutdown source when not visible (for testing)
+   - Refresh browser when scene becomes active
+   - Shutdown source when not visible (for testing)
 4. Click **OK**
 
 ### Testing Alerts
