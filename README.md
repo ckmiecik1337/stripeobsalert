@@ -57,7 +57,7 @@ npm install
 
 ### 3. Configure Environment Variables
 
-Create a `.env` file in the project root:
+Edit the `.env` file in the project root:
 
 ```env
 STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key_here
