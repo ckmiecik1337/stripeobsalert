@@ -2,7 +2,8 @@
 
 A real-time donation alert system that integrates Stripe payments with OBS Studio for live streaming. When viewers make donations through Stripe, animated alerts appear on your stream instantly.
 
-![Donation Alert Demo](https://s4.ezgif.com/tmp/ezgif-4df2ad2800fd208c.gif)
+![Donation Alert Demo](https://i.ibb.co/BVfjWmh8/ezgif-4df2ad2800fd208c.gif)
+
 
 ## Features
 
@@ -21,16 +22,34 @@ A real-time donation alert system that integrates Stripe payments with OBS Studi
 - OBS Studio
 - A publicly accessible server (via Cloudflare Tunnel, ngrok, or similar)
 
+
+##  Dependencies
+
+- **express** - Web server framework
+- **socket.io** - Real-time WebSocket communication
+- **stripe** - Stripe API integration
+- **cors** - Cross-origin resource sharing
+- **dotenv** - Environment variable management
+
+
+
 ##  Installation
 
 ### 1. Clone or Download
 
 ```bash
-git clone https://github.com/ckmiecik1337/obsalert
-cd stripe-obs-donation-alerts
+git clone https://github.com/ckmiecik1337/stripeobsalert
+cd stripeobsalert
 ```
 
 ### 2. Install Dependencies
+Ensure you have npm installed, if not:
+
+
+```bash
+sudo apt-get install npm
+```
+
 
 ```bash
 npm install
@@ -182,14 +201,3 @@ transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 ```
 
 Change `0.5s` to speed up or slow down animations.
-
-
-##  Dependencies
-
-- **express** - Web server framework
-- **socket.io** - Real-time WebSocket communication
-- **stripe** - Stripe API integration
-- **cors** - Cross-origin resource sharing
-- **dotenv** - Environment variable management
-
-
