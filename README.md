@@ -74,7 +74,7 @@ PORT=3001
 1. Go to [Stripe Dashboard → Webhooks](https://dashboard.stripe.com/webhooks)
 2. Click **"Add endpoint"**
 3. Endpoint URL: `https://yourdomain.com/webhook`
-4. Select event to listen for: `payment_intent.succeeded`
+4. Select event to listen for: `payment_intent.succeeded + checkout.session.completed`
 5. Copy the **Signing secret** (starts with `whsec_`) to your `.env` file
 
 **Important:** When creating Stripe Payment Intents, include metadata:
