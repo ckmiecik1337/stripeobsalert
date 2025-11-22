@@ -27,8 +27,60 @@ app.post('/webhook', express.raw({type: 'application/json'}), async (req, res) =
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
+  // Handle checkout.session.completed event
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    
+    // Log full session data to debug
+    console.log('Checkout Session metadata:', session.metadata);
+    console.log('Customer details:', session.customer_details);
+    console.log('Custom fields:', session.custom_fields);
+    
+    // Extract donor name from various possible sources
+    let donorName = 'Anonymous';
+    let message = '';
+    
+    // Priority 1: Custom fields (if using custom_fields in checkout)
+    if (session.custom_fields && session.custom_fields.length > 0) {
+      const nameField = session.custom_fields.find(f => f.key === 'name');
+      const messageField = session.custom_fields.find(f => f.key === 'message');
+      
+      if (nameField?.text?.value) donorName = nameField.text.value;
+      if (messageField?.text?.value) message = messageField.text.value;
+    }
+    
+    // Priority 2: Metadata
+    if (donorName === 'Anonymous' && session.metadata?.donor_name) {
+      donorName = session.metadata.donor_name;
+    }
+    if (!message && session.metadata?.message) {
+      message = session.metadata.message;
+    }
+    
+    // Priority 3: Customer details (billing info)
+    if (donorName === 'Anonymous' && session.customer_details?.name) {
+      donorName = session.customer_details.name;
+    }
+    
+    const donationData = {
+      amount: session.amount_total / 100, // amount_total is in cents
+      currency: session.currency.toUpperCase(),
+      donorName: donorName,
+      message: message,
+      timestamp: new Date().toISOString()
+    };
+
+    console.log('New donation received:', donationData);
+    io.emit('donation', donationData);
+  }
+  
+  // Keep payment_intent.succeeded as fallback
   if (event.type === 'payment_intent.succeeded') {
     const paymentIntent = event.data.object;
+    
+    // Log full metadata to debug
+    console.log('Payment Intent metadata:', paymentIntent.metadata);
+    console.log('Payment Intent receipt_email:', paymentIntent.receipt_email);
     
     const donationData = {
       amount: paymentIntent.amount / 100,
