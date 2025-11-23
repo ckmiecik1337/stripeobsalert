@@ -18,30 +18,19 @@
     }
 
     .alert-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      
-      
-      /*Remove to use png
-      /*background: url('/background.png') center/cover no-repeat;
-      
-      /* Fallback background if image doesn't load */
-      
-      background-size: cover;
-      background-color: #00143f;
-      padding: 40px 60px;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-      text-align: center;
-      opacity: 0;
-      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      min-width: 500px;
-      max-width: 2000px;
-      width: auto;
-      border: 3px solid rgba(255, 255, 255, 0.3);
-    }
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: transparent;
+  padding: 40px 60px;
+  text-align: center;
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  min-width: 500px;
+  max-width: 900px;
+  width: auto;
+}
 
     .alert-container.show {
       transform: translate(-50%, -50%) scale(1);
@@ -61,7 +50,7 @@
     .donor-name {
       font-size: 64px;
       font-weight: bold;
-      color: #ffd700;
+      color: #C83803;
       margin-bottom: 15px;
       text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
       animation: glow 2s ease-in-out infinite;
